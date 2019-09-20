@@ -22,6 +22,7 @@
 #include "Arduino.h"
 #include "Stream.h"
 #include <esp_spp_api.h>
+#include <esp_gap_bt_api.h>
 
 class BluetoothSerial: public Stream
 {
@@ -30,7 +31,7 @@ class BluetoothSerial: public Stream
         BluetoothSerial(void);
         ~BluetoothSerial(void);
 
-		bool begin (String localName = String (), esp_spp_role_t role = ESP_SPP_ROLE_SLAVE, String bda_name = String (), esp_bd_addr_t destAddress = 0);
+		bool begin (String localName = String (), esp_spp_role_t role = ESP_SPP_ROLE_SLAVE, String bda_name = String (), esp_bd_addr_t destAddress = 0, esp_bt_pin_code_t pin_code = 0, uint8_t pin_length = 0);
         int available(void);
         int peek(void);
         bool hasClient(void);

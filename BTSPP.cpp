@@ -420,7 +420,7 @@ bool check_null_address (esp_bd_addr_t address) {
 	return true;
 }
 
-static bool _init_bt (const char* deviceName)
+static bool _init_bt (const char* deviceName, esp_bt_pin_code_t pin_code, uint8_t pin_length)
 {
 	if (!_spp_event_group) {
 		_spp_event_group = xEventGroupCreate ();
@@ -493,6 +493,7 @@ static bool _init_bt (const char* deviceName)
 	}
 
 	if (!bt_role) { // If master
+	    esp_bt_gap_set_pin(ESP_BT_PIN_TYPE_FIXED, pin_length, pin_code);
 		if (check_null_address (peer_bdaddress)) {
 			if ((esp_bt_gap_register_callback (esp_bt_gap_cb)) != ESP_OK) {
 				log_e ("GAP register failed");
@@ -591,7 +592,7 @@ BluetoothSerial::~BluetoothSerial (void)
 	_stop_bt ();
 }
 
-bool BluetoothSerial::begin (String localName, esp_spp_role_t role, String bda_name, esp_bd_addr_t destAddress)
+bool BluetoothSerial::begin (String localName, esp_spp_role_t role, String bda_name, esp_bd_addr_t destAddress, esp_bt_pin_code_t pin_code, uint8_t pin_length)
 {
 	if (localName.length ()) {
 		local_name = localName;
@@ -623,7 +624,7 @@ bool BluetoothSerial::begin (String localName, esp_spp_role_t role, String bda_n
 		}
 	}
 
-	return _init_bt (local_name.c_str ());
+	return _init_bt (local_name.c_str (), pin_code, pin_length);
 }
 
 int BluetoothSerial::available (void)
